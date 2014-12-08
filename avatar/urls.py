@@ -9,4 +9,10 @@ urlpatterns = [
     url(r'^render_primary/(?P<user>[\w\d\@\.\-_]+)/(?P<size>[\d]+)/$',
         views.render_primary,
         name='avatar_render_primary'),
+    url(r'^add_for_user/(?P<for_user>[\w@\.\+\-_]+)/$',
+        views.add_avatar_for_user, name='avatar_add_for_user'),
+    url(r'^change_for_user/(?P<for_user>[\w@\.\+\-_]+)/$',
+        views.change_avatar_for_user, name='avatar_change_for_user'),
+    url(r'^delete_for_user/(?P<for_user>[\w@\.\+\-_]+)/$',
+        views.delete_avatar_for_user, name='avatar_delete_for_user'),
 ]
