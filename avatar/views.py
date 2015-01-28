@@ -107,6 +107,7 @@ def change(request, extra_context=None, next_override=None,
             avatar = Avatar.objects.get(
                 id=primary_avatar_form.cleaned_data['choice'])
             avatar.primary = True
+            avatar.create_thumbnail(settings.AVATAR_DEFAULT_SIZE)
             avatar.save()
             updated = True
             invalidate_cache(request.user)
@@ -229,6 +230,7 @@ def change_avatar_for_user(request, for_user=None, extra_context=None,
             avatar = Avatar.objects.get(id=
                 primary_avatar_form.cleaned_data['choice'])
             avatar.primary = True
+            avatar.create_thumbnail(settings.AVATAR_DEFAULT_SIZE)
             avatar.save()
             updated = True
             messages.add_message(request, messages.INFO, _("Successfully updated this user's avatars"))
