@@ -9,6 +9,7 @@ from avatar.conf import settings
 from avatar.models import Avatar
 from avatar.utils import (
     cache_result,
+    cache_result_0arg,
     get_default_avatar_url,
     get_user_model,
     get_user,
@@ -18,8 +19,8 @@ from avatar.utils import (
 register = template.Library()
 
 
+@register.simple_tag(name='avatar_url')
 @cache_result()
-@register.simple_tag
 def avatar_url(user, size=settings.AVATAR_DEFAULT_SIZE):
     for provider_path in settings.AVATAR_PROVIDERS:
         provider = import_string(provider_path)
@@ -28,8 +29,8 @@ def avatar_url(user, size=settings.AVATAR_DEFAULT_SIZE):
             return avatar_url
 
 
+@register.simple_tag(name='avatar')
 @cache_result()
-@register.simple_tag
 def avatar(user, size=settings.AVATAR_DEFAULT_SIZE, **kwargs):
     if not isinstance(user, get_user_model()):
         try:
@@ -52,15 +53,16 @@ def avatar(user, size=settings.AVATAR_DEFAULT_SIZE, **kwargs):
     return render_to_string('avatar/avatar_tag.html', context)
 
 
-@register.filter
+@register.filter(name='has_avatar')
+@cache_result_0arg()
 def has_avatar(user):
     if not isinstance(user, get_user_model()):
         return False
     return Avatar.objects.filter(user=user, primary=True).exists()
 
 
+@register.simple_tag(name='primary_avatar')
 @cache_result()
-@register.simple_tag
 def primary_avatar(user, size=settings.AVATAR_DEFAULT_SIZE):
     """
     This tag tries to get the default avatar for a user without doing any db
@@ -73,9 +75,8 @@ def primary_avatar(user, size=settings.AVATAR_DEFAULT_SIZE):
     return ("""<img src="%s" alt="%s" width="%s" height="%s" />""" %
             (url, alt, size, size))
 
-
+@register.simple_tag(name='render_avatar')
 @cache_result()
-@register.simple_tag
 def render_avatar(avatar, size=settings.AVATAR_DEFAULT_SIZE):
     if not avatar.thumbnail_exists(size):
         avatar.create_thumbnail(size)

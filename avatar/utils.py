@@ -57,13 +57,36 @@ def cache_result(default_size=settings.AVATAR_DEFAULT_SIZE):
         return decorator
 
     def decorator(func):
+        prefix = func.__name__
+        cached_funcs.add(prefix)
         def cached_func(user, size=None):
-            prefix = func.__name__
-            cached_funcs.add(prefix)
             key = get_cache_key(user, size or default_size, prefix=prefix)
             result = cache.get(key)
             if result is None:
                 result = func(user, size or default_size)
+                cache_set(key, result)
+            return result
+        return cached_func
+    return decorator
+
+
+def cache_result_0arg(default_size=settings.AVATAR_DEFAULT_SIZE):
+    """
+    Decorator to cache the result of functions that take only a ``user`` value.
+    """
+    if not settings.AVATAR_CACHE_ENABLED:
+        def decorator(func):
+            return func
+        return decorator
+
+    def decorator(func):
+        prefix = func.__name__
+        cached_funcs.add(prefix)
+        def cached_func(user):
+            key = get_cache_key(user, default_size, prefix=prefix)
+            result = cache.get(key)
+            if result is None:
+                result = func(user)
                 cache_set(key, result)
             return result
         return cached_func
