@@ -34,7 +34,6 @@ def avatar_url(user, size=settings.AVATAR_DEFAULT_SIZE):
 
 
 @register.simple_tag(name='avatar')
-@cache_result()
 def avatar(user, size=settings.AVATAR_DEFAULT_SIZE, **kwargs):
     if not isinstance(user, get_user_model()):
         try:
