@@ -132,6 +132,8 @@ def get_primary_avatar(user, size=settings.AVATAR_DEFAULT_SIZE):
             user = get_user(user)
         except User.DoesNotExist:
             return None
+    if not user.is_active:
+        return None
     try:
         # Order by -primary first; this means if a primary=True avatar exists
         # it will be first, and then ordered by date uploaded, otherwise a
