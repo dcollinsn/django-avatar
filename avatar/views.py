@@ -245,7 +245,7 @@ def change_avatar_for_user(request, for_user=None, extra_context=None,
         'next': next_override or _get_next(request),
     }
     context.update(extra_context)
-    return render(request, 'avatar/add_for_user.html', context)
+    return render(request, 'avatar/change_for_user.html', context)
 
 @login_required
 def delete_avatar_for_user(request, for_user=None, extra_context=None,
@@ -280,7 +280,7 @@ def delete_avatar_for_user(request, for_user=None, extra_context=None,
         'next': next_override or _get_next(request),
     }
     context.update(extra_context)
-    return render(request, 'avatar/add_for_user.html', context)
+    return render(request, 'avatar/confirm_delete_for_user.html', context)
 
 
 def render_primary(request, user=None, size=settings.AVATAR_DEFAULT_SIZE):
