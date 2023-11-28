@@ -87,6 +87,33 @@ def cache_result(default_size=settings.AVATAR_DEFAULT_SIZE):
     return decorator
 
 
+def cache_result_0arg(default_size=settings.AVATAR_DEFAULT_SIZE):
+    """
+    Decorator to cache the result of functions that take only a ``user``
+    """
+    if not settings.AVATAR_CACHE_ENABLED:
+
+        def decorator(func):
+            return func
+
+        return decorator
+
+    def decorator(func):
+        def cached_func(user, **kwargs):
+            prefix = func.__name__
+            cached_funcs.add(prefix)
+            key = get_cache_key(user, prefix)
+            result = cache.get(key)
+            if result is None:
+                result = func(user, **kwargs)
+                cache_set(key, result)
+            return result
+
+        return cached_func
+
+    return decorator
+
+
 def invalidate_cache(user, width=None, height=None):
     """
     Function to be called when saving or changing a user's avatars.
@@ -132,6 +159,8 @@ def get_primary_avatar(user, width=settings.AVATAR_DEFAULT_SIZE, height=None):
             user = get_user(user)
         except User.DoesNotExist:
             return None
+    if not user.is_active:
+        return None
     try:
         # Order by -primary first; this means if a primary=True avatar exists
         # it will be first, and then ordered by date uploaded, otherwise a

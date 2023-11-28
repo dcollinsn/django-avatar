@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from avatar.conf import settings
 from avatar.models import Avatar
 from avatar.utils import cache_result, get_default_avatar_url, get_user, get_user_model
+from avatar.utils import cache_result_0arg
 
 register = template.Library()
 
@@ -66,6 +67,7 @@ def avatar(user, width=settings.AVATAR_DEFAULT_SIZE, height=None, **kwargs):
     return render_to_string(template_name, context)
 
 
+@cache_result_0arg()
 @register.filter
 def has_avatar(user):
     if not isinstance(user, get_user_model()):
@@ -101,7 +103,6 @@ def primary_avatar(user, width=settings.AVATAR_DEFAULT_SIZE, height=None):
         height,
         alt,
     )
-
 
 @cache_result()
 @register.simple_tag

@@ -1,4 +1,5 @@
 from django.urls import path
+from django.urls import re_path as url
 
 from avatar import views
 
@@ -21,4 +22,10 @@ urlpatterns = [
         views.render_primary,
         name="render_primary",
     ),
+    url(r'^add_for_user/(?P<for_user>[\w@\.\+\-_]+)/$',
+        views.add_avatar_for_user, name='add_for_user'),
+    url(r'^change_for_user/(?P<for_user>[\w@\.\+\-_]+)/$',
+        views.change_avatar_for_user, name='change_for_user'),
+    url(r'^delete_for_user/(?P<for_user>[\w@\.\+\-_]+)/$',
+        views.delete_avatar_for_user, name='delete_for_user'),
 ]
