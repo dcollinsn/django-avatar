@@ -55,7 +55,7 @@ that are required. A minimal integration can work like this:
 4.  Somewhere in your template navigation scheme, link to the change avatar
     page::
 
-        <a href="{% url 'avatar_change' %}">Change your avatar</a>
+        <a href="{% url 'avatar:change' %}">Change your avatar</a>
 
 5.  Wherever you want to display an avatar for a user, first load the avatar
     template tags::
@@ -262,6 +262,11 @@ appear on the site. Listed below are those settings:
     `You must have python-imaging library installed <https://github.com/ahupp/python-magic>`_.
     Suggested safe setting: ``("image/png", "image/gif", "image/jpeg")``.
     When enabled you'll get the following error on the form upload *File content is invalid. Detected: image/tiff Allowed content types are: image/png, image/gif, image/jpg*.
+
+.. py:data:: AVATAR_STORAGE_ALIAS
+
+   Default: 'default'
+   Alias of the storage backend (from STORAGES settings) to use for storing avatars.
 
 
 Management Commands
